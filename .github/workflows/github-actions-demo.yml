@@ -1,37 +1,30 @@
 name: github-actions-demo
-run-name: ${{ github.actor }} is learning GitHub Actions
-on: [push]
+
+on: 
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
 jobs:
-  check-bats-version:
+  build-job:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - run: npm install -g bats
-      - run: bats -v
+      -uses: actions/checkout@v3
+      -run: python3 -V
+      
 
+  test-count:
+    runs-on: ubuntu-latest
+    steps:
+      -uses: actions/checkout@v3
+      -run: python3 test.py
 
+  deploy-job:
+    runs-on: ubuntu-latest
+    steps:
+      -uses: actions/checkout@v3
+      -run: echo "Finalizando"
 
-image: python
-
-stages:
-    - build
-    - test
-    - deploy
-
-build-job:
-    stage: build
-    script:
-        - python3 -V
-
-test-count:
-    stage: test
-    script:
-        - python3 sum.py
-
-deploy-job:
-    stage: deploy
-    script:
-        - echo "terminou :D"
